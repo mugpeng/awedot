@@ -2,6 +2,10 @@
 
 ## v0.5.0 — 2026-06-21
 
+- GitHub releases: https://github.com/mugpeng/awedot
+- Website: https://awedot.wehuman.top/
+- Community: https://github.com/mugpeng/awedot-community
+
 ### Features
 
 - **One-command DMG build**: new `build:dmg` script compiles universal macOS binary and injects installer assets in a single step
