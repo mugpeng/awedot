@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.4.9 — 2026-06-21
+
+### Changed
+
+- Remove `is_interrupt` dead code from state machine (was based on a non-existent Stop hook field)
+- CI: add `cargo test` job on macOS to catch Rust compilation errors
+- Fix build script: correct RTF filename from `README.rtf` to `Installation Guide.rtf`
+
 ## v0.4.8 — 2026-06-21
 
 ### Features

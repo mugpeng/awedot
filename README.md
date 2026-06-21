@@ -4,8 +4,8 @@
   <p><strong>A floating orb lives at your screen edge. One-click bookmark the current session, resume anytime with the original API profile.</strong></p>
   <p>
     <a href="./README.zh-CN.md">简体中文</a> ·
-    <a href="https://awedot.wehuman.top/">官网</a> ·
-    <a href="https://github.com/mugpeng/awedot-Community/discussions">社区讨论</a>
+    <a href="https://awedot.wehuman.top/">Website</a> ·
+    <a href="https://github.com/mugpeng/awedot-Community/discussions">Community</a>
   </p>
   <p>
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
