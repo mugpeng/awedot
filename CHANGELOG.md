@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.4.8 — 2026-06-21
+
+### Features
+
+- **Ctrl+C interrupt handling**: state machine now treats Ctrl+C (is_interrupt=true) as Active → Idle transition, matching user expectation when cancelling a turn
+
+### Changed
+
+- **Version check migrated to GitHub API**: queries `/repos/mugpeng/awedot/releases/latest` instead of `awedot.vercel.app/api/version`
+- Update fallback no longer hardcodes version string — returns null on error
+- CI: add dev branch triggers, split into frontend and rust jobs
+- Settings: add `auto_check_updates` default value
+
 ## v0.4.7 — 2026-06-21
 
 ### Features
