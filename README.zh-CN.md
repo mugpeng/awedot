@@ -5,7 +5,7 @@
   <p>
     <a href="./README.md">English</a> ·
     <a href="https://awedot.wehuman.top/">官网</a> ·
-    <a href="https://github.com/mugpeng/awedot-Community/discussions">社区讨论</a>
+    <a href="https://github.com/mugpeng/awedot-community">社区讨论</a>
   </p>
   <p>
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
