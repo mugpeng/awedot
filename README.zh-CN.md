@@ -1,11 +1,11 @@
 <div align="center">
   <img src="logo/icon.png" alt="awedot" width="180">
   <h1>awedot: AI Session Bookmark Manager for AI Agents</h1>
-  <p><strong>A floating orb lives at your screen edge. One-click bookmark the current session, resume anytime with the original API profile.</strong></p>
+  <p><strong>悬浮球常驻屏幕边缘，一键 bookmark 当前 session，随时 resume 并携带当时的 API profile。</strong></p>
   <p>
-    <a href="https://github.com/mugpeng/awedot-Community/discussions">Community</a> ·
+    <a href="https://github.com/mugpeng/awedot-Community/discussions">社区讨论</a> ·
     <a href="https://awedot.wehuman.top/">官网</a> ·
-    <a href="./README.zh-CN.md">简体中文</a>
+    <a href="./README.md">English</a>
   </p>
   <p>
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
@@ -15,10 +15,10 @@
   </p>
 </div>
 
-## Download
+## 下载
 
-See [Releases](https://github.com/mugpeng/awedot/releases) for the latest `.dmg`.
+最新 `.dmg` 请见 [发行页](https://github.com/mugpeng/awedot/releases)。
 
-## Changelog
+## 更新日志
 
-See [CHANGELOG.md](CHANGELOG.md).
+见 [CHANGELOG.md](CHANGELOG.md)。
