@@ -24,6 +24,20 @@ See [Releases](https://github.com/mugpeng/awedot/releases) for the latest `.dmg`
 
 See [CHANGELOG.md](CHANGELOG.md).
 
+## How to Use
+
+1. **Install**: Download the `.dmg` and drag `awedot.app` into Applications. If macOS warns "developer cannot be verified", double-click the `Fix Gatekeeper` script in the same folder.
+
+2. **Floating Orb**: After launch, a glowing orb sits at your screen edge, showing real-time status of your AI agent.
+
+3. **Open Panel**: Click the orb or press the hotkey to expand the panel. Browse **Sessions** (active AI coding sessions) and **Bookmarks** (saved sessions).
+
+4. **Bookmark**: Click the bookmark icon on any session to save it with a title, category, project path, and API profile.
+
+5. **Resume**: Click any bookmark or session to restore it in your terminal — with the original API profile and terminal settings intact.
+
+6. **Search & Filter**: Full-text search, sort by status / time / tool / project, and filter by category.
+
 ## Supported
 
 **Platform** — macOS available now · Windows & Linux coming soon
