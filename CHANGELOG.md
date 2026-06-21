@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.5.0 — 2026-06-21
+
+### Features
+
+- **One-command DMG build**: new `build:dmg` script compiles universal macOS binary and injects installer assets in a single step
+
+### Changed
+
+- DMG icon layout: `.DS_Store` written via Python for precise icon positioning — Installation Guide, awedot.app, Applications symlink, and Fix Gatekeeper command arranged at specified coordinates
+
+### Fixed
+
+- RTF filename renamed to `!Installation Guide.rtf` so it sorts before the app icon in Finder
+
 ## v0.4.9 — 2026-06-21
 
 ### Changed
