@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.4.7 — 2026-06-21
+
+### Features
+
+- **Auto-replace app on update**: download DMG to /tmp, mount, copy over /Applications, relaunch — no manual drag-to-install needed
+
+### Changed
+
+- Simplify DMG injection: remove Python PIL background generation, inject `Installation Guide.rtf` alongside `Fix Gatekeeper.command`
+- `Fix Gatekeeper.command` now points to `/Applications/awedot.app` instead of relative path
+
 ## v0.4.6 — 2026-06-20
 
 ### Features

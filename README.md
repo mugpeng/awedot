@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo/icon.png" alt="awedot" width="180">
+  <img src="logo/logo.png" alt="awedot" width="180">
   <h1>awedot: AI Session Bookmark Manager for AI Agents</h1>
   <p><strong>A floating orb lives at your screen edge. One-click bookmark the current session, resume anytime with the original API profile.</strong></p>
   <p>
@@ -15,6 +15,7 @@
   </p>
 </div>
 
+
 ## Download
 
 See [Releases](https://github.com/mugpeng/awedot/releases) for the latest `.dmg`.
@@ -22,3 +23,9 @@ See [Releases](https://github.com/mugpeng/awedot/releases) for the latest `.dmg`
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+## Supported
+
+**Platform** — macOS available now · Windows & Linux coming soon
+
+**Agents** — Claude Code · Codex available now · Gemini CLI · Cursor Agent · Droid · Qoder · Copilot · CodeBuddy · OpenCode coming soon

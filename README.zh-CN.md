@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo/icon.png" alt="awedot" width="180">
+  <img src="logo/logo.png" alt="awedot" width="180">
   <h1>awedot: AI Session Bookmark Manager for AI Agents</h1>
   <p><strong>悬浮球常驻屏幕边缘，一键 bookmark 当前 session，随时 resume 并携带当时的 API profile。</strong></p>
   <p>
@@ -22,3 +22,9 @@
 ## 更新日志
 
 见 [CHANGELOG.md](CHANGELOG.md)。
+
+## 支持情况
+
+**平台** — macOS 现已支持 · Windows & Linux 即将推出
+
+**Agent** — Claude Code · Codex 现已支持 · Gemini CLI · Cursor Agent · Droid · Qoder · Copilot · CodeBuddy · OpenCode 即将推出
