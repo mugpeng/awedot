@@ -1,0 +1,91 @@
+name: "Bug Report / 报告 Bug"
+description: "Something isn't working as expected / 遇到了问题"
+title: "[Bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill in as much detail as you can. 请尽量填写详细信息。
+
+  - type: input
+    id: version
+    attributes:
+      label: "awedot Version / 版本"
+      description: "悬浮球 → 设置 底部 / Floating orb → Settings (bottom)"
+      placeholder: "e.g. 0.4.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: "Platform / 平台"
+      options:
+        - macOS
+        - Windows (coming soon)
+        - Linux (coming soon)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: agent
+    attributes:
+      label: "Agent / Agent 类型"
+      options:
+        - Claude Code
+        - Codex
+        - Gemini CLI (coming soon)
+        - Cursor Agent (coming soon)
+        - Droid (coming soon)
+        - Qoder (coming soon)
+        - Copilot (coming soon)
+        - CodeBuddy (coming soon)
+        - OpenCode (coming soon)
+        - Multiple / Not specific
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "What happened? / 发生了什么？"
+      placeholder: "When I..., I expected..., but instead..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to reproduce / 复现步骤"
+      placeholder: |
+        1. Start a Claude Code session
+        2. ...
+        3. ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Logs / 日志"
+      description: "Paste relevant log output here / 粘贴相关日志"
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots / 截图"
+      description: "Drag and drop images here / 拖入图片"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I searched existing issues and this hasn't been reported yet / 我已搜索过，这个问题未被报告过"
+          required: true
