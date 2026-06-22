@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>awedot startup sound demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+    background: #1a1a1a; color: #e0e0e0;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 2rem;
+  }
+  .container { max-width: 520px; width: 100%; }
+  h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: .3rem; color: #fff; }
+  .subtitle { font-size: .85rem; color: #888; margin-bottom: 2rem; }
+  .card {
+    background: #252525; border: 1px solid #333; border-radius: 12px;
+    padding: 1.2rem 1.4rem; margin-bottom: 1rem; cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .card:hover { background: #2a2a2a; border-color: #555; }
+  .card:active { background: #333; }
+  .card .name { font-size: 1rem; font-weight: 500; color: #fff; }
+  .card .desc { font-size: .8rem; color: #888; margin-top: .3rem; }
+  .card .code { font-size: .7rem; color: #666; margin-top: .5rem; font-family: "SF Mono", monospace; }
+  .playing { border-color: #4f9cf7 !important; box-shadow: 0 0 0 1px #4f9cf7; }
+  .playing .name { color: #4f9cf7; }
+  .footer { text-align: center; font-size: .75rem; color: #555; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>awedot startup sound</h1>
+  <p class="subtitle">longer, welcoming vibes · click to preview</p>
+
+  <div class="card" data-sound="island" onclick="play('island', this)">
+    <div class="name">Island Welcome</div>
+    <div class="desc">macOS Dynamic Island style — layered ascending tones with soft reverb tail · 2.0s</div>
+    <div class="code">C5→E5→G5→C6 · sine+triangle layered · long exponential tail</div>
+  </div>
+
+  <div class="card" data-sound="dawn" onclick="play('dawn', this)">
+    <div class="name">Dawn</div>
+    <div class="desc">gentle sunrise — slow rising chord with detuned warmth · 2.2s</div>
+    <div class="code">G4+B4+D5 arpeggio · slight detune for chorus · warm pad feel</div>
+  </div>
+
+  <div class="card" data-sound="glass-house" onclick="play('glass-house', this)">
+    <div class="name">Glass House</div>
+    <div class="desc">HomePod-style crystalline cascade · 1.8s</div>
+    <div class="code">high harmonic stack · very slow decay · shimmer</div>
+  </div>
+
+  <div class="card" data-sound="aurora" onclick="play('aurora', this)">
+    <div class="name">Aurora</div>
+    <div class="desc">spacious and dreamy — wide intervals with harmonic overtones · 2.5s</div>
+    <div class="code">E4→B4→E5→G#5 · sine + quiet 5th harmonic · reverb-like tail</div>
+  </div>
+
+  <div class="card" data-sound="welcome-home" onclick="play('welcome-home', this)">
+    <div class="name">Welcome Home</div>
+    <div class="desc">warm, familiar — like walking through your front door · 1.8s</div>
+    <div class="code">F4→A4→C5→F5 · major chord arpeggio · soft attack · cozy decay</div>
+  </div>
+
+  <p class="footer">all sounds are Web Audio API synthesized — no external files needed</p>
+</div>
+
+<script>
+const ctx = new AudioContext();
+
+function tone(freq, start, dur, type, vol) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, start);
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.linearRampToValueAtTime(vol, start + 0.04); // soft attack
+  gain.gain.setValueAtTime(vol, start + dur * 0.6);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  osc.start(start); osc.stop(start + dur);
+  return osc;
+}
+
+function detunedTone(freq, start, dur, type, vol, cents) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, start);
+  osc.detune.setValueAtTime(cents || 5, start);
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.linearRampToValueAtTime(vol, start + 0.06);
+  gain.gain.setValueAtTime(vol, start + dur * 0.5);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  osc.start(start); osc.stop(start + dur);
+}
+
+function harmonic(freq, start, dur, vol) {
+  // quiet overtone for shimmer
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq * 2.002, start); // slight detune on harmonic
+  gain.gain.setValueAtTime(vol, start);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+  osc.start(start); osc.stop(start + dur);
+}
+
+function play(name, el) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+  el.classList.add('playing');
+
+  const t = ctx.currentTime;
+
+  switch (name) {
+    // ── Island Welcome ──
+    // C5(523) → E5(659) → G5(784) → C6(1047)
+    // layered sine + triangle, slow reverb-like tail
+    case 'island': {
+      const notes = [523, 659, 784, 1047];
+      notes.forEach((f, i) => {
+        const st = t + i * 0.22;
+        tone(f, st, 1.8 - i * 0.15, 'sine', 0.15);
+        tone(f, st, 1.6 - i * 0.15, 'triangle', 0.04);
+        harmonic(f, st, 1.2, 0.015);
+      });
+      // low C4 pad underneath
+      tone(262, t, 2.0, 'sine', 0.06);
+      break;
+    }
+
+    // ── Dawn ──
+    // G4(392)+B4(494)+D5(587) chord, rising in with detuned warmth
+    case 'dawn': {
+      detunedTone(392, t + 0.0, 2.2, 'sine', 0.10, 4);
+      detunedTone(494, t + 0.15, 2.0, 'sine', 0.10, -3);
+      detunedTone(587, t + 0.30, 1.8, 'sine', 0.10, 5);
+      detunedTone(784, t + 0.50, 1.5, 'triangle', 0.05, -4);
+      // shimmer harmonic
+      harmonic(392, t + 0.3, 1.5, 0.01);
+      harmonic(587, t + 0.5, 1.2, 0.008);
+      break;
+    }
+
+    // ── Glass House ──
+    // High cascade: E6→G#6→B6→E7, very slow decay, crystalline
+    case 'glass-house': {
+      const notes = [1319, 1661, 1976, 2637];
+      notes.forEach((f, i) => {
+        const st = t + i * 0.12;
+        tone(f, st, 1.8 - i * 0.1, 'sine', 0.08);
+        harmonic(f, st, 1.0, 0.02);
+      });
+      // low anchor
+      tone(659, t, 1.8, 'sine', 0.04);
+      break;
+    }
+
+    // ── Aurora ──
+    // E4→B4→E5→G#5, wide intervals, harmonic overtones, dreamy
+    case 'aurora': {
+      const notes = [330, 494, 659, 831];
+      notes.forEach((f, i) => {
+        const st = t + i * 0.3;
+        tone(f, st, 2.5 - i * 0.2, 'sine', 0.12);
+        harmonic(f, st, 1.8, 0.012);
+        // 5th harmonic for shimmer
+        const h5 = ctx.createOscillator();
+        const g5 = ctx.createGain();
+        h5.connect(g5); g5.connect(ctx.destination);
+        h5.type = 'sine';
+        h5.frequency.setValueAtTime(f * 3.003, st);
+        g5.gain.setValueAtTime(0.005, st);
+        g5.gain.exponentialRampToValueAtTime(0.001, st + 1.5);
+        h5.start(st); h5.stop(st + 1.5);
+      });
+      break;
+    }
+
+    // ── Welcome Home ──
+    // F4→A4→C5→F5, major arpeggio, soft and cozy
+    case 'welcome-home': {
+      const notes = [349, 440, 523, 698];
+      notes.forEach((f, i) => {
+        const st = t + i * 0.18;
+        tone(f, st, 1.8 - i * 0.1, 'sine', 0.14);
+        tone(f, st, 1.5 - i * 0.1, 'triangle', 0.03);
+      });
+      // gentle low F3 undertone
+      tone(175, t + 0.1, 1.6, 'sine', 0.05);
+      break;
+    }
+  }
+}
+</script>
+</body>
+</html>

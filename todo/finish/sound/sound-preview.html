@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>启动音效试听</title>
+<style>
+  body { background: #0f1117; color: #e0e0e0; font-family: -apple-system, sans-serif; padding: 40px; }
+  h1 { font-size: 20px; margin-bottom: 8px; }
+  .subtitle { color: #888; font-size: 13px; margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.15s; }
+  .card:hover { border-color: #6EA7FF; background: #1e2230; }
+  .card:active { transform: scale(0.98); }
+  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .card-desc { font-size: 12px; color: #888; line-height: 1.5; }
+  .tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-top: 10px; }
+  .tag-rec { background: rgba(110,167,255,0.15); color: #6EA7FF; }
+  .tag-alt { background: rgba(255,255,255,0.06); color: #888; }
+  .playing { border-color: #6EA7FF !important; }
+</style>
+</head>
+<body>
+<h1>🔊 启动音效方案</h1>
+<p class="subtitle">点击卡片试听，选一个你喜欢的</p>
+<div class="grid">
+
+  <div class="card" onclick="play('welcome', this)">
+    <div class="card-title">方案 A：欢迎光临</div>
+    <div class="card-desc">低音 sweep 上行 + 高音和弦收尾，类似门铃声的升级版。有"欢迎"的仪式感，约 1.2s。</div>
+    <span class="tag tag-rec">推荐</span>
+  </div>
+
+  <div class="card" onclick="play('sweep-chord', this)">
+    <div class="card-title">方案 B：Sweep + 和弦</div>
+    <div class="card-desc">更明显的 sweep 到 chord 过渡，从 200Hz 扫到 800Hz 再落回 523Hz 收尾。约 1.4s。</div>
+    <span class="tag tag-alt">备选</span>
+  </div>
+
+  <div class="card" onclick="play('arpeggio', this)">
+    <div class="card-title">方案 C：上行琶音</div>
+    <div class="card-desc">五音递进上行（C4→E4→G4→C5→E5），类似电话接通的提示音。清晰友好，约 1s。</div>
+    <span class="tag tag-alt">备选</span>
+  </div>
+
+  <div class="card" onclick="play('chime', this)">
+    <div class="card-title">方案 D：铃铛回声</div>
+    <div class="card-desc">主音 + 两个延迟衰减的回声，类似风铃。轻灵不吵，约 1.5s。</div>
+    <span class="tag tag-alt">备选</span>
+  </div>
+
+</div>
+
+<script>
+let ctx = null;
+async function getCtx() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (ctx.state === "suspended") await ctx.resume();
+  return ctx;
+}
+
+async function playWelcome() {
+  const c = await getCtx();
+  const t = c.currentTime;
+  // sweep 200→800 over 0.5s
+  const o1 = c.createOscillator();
+  const g1 = c.createGain();
+  o1.connect(g1); g1.connect(c.destination);
+  o1.type = "sine";
+  o1.frequency.setValueAtTime(200, t);
+  o1.frequency.exponentialRampToValueAtTime(800, t + 0.5);
+  g1.gain.setValueAtTime(0.01, t);
+  g1.gain.linearRampToValueAtTime(0.2, t + 0.08);
+  g1.gain.setValueAtTime(0.2, t + 0.4);
+  g1.gain.exponentialRampToValueAtTime(0.01, t + 0.7);
+  o1.start(t); o1.stop(t + 0.7);
+  // chord 523+659+784 at 0.45s
+  [523, 659, 784].forEach(freq => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t + 0.45);
+    g.gain.setValueAtTime(0, t + 0.45);
+    g.gain.linearRampToValueAtTime(0.18, t + 0.45 + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.01, t + 1.2);
+    o.start(t + 0.45); o.stop(t + 1.2);
+  });
+}
+
+async function playSweepChord() {
+  const c = await getCtx();
+  const t = c.currentTime;
+  // sweep 200→800 over 0.6s
+  const o1 = c.createOscillator();
+  const g1 = c.createGain();
+  o1.connect(g1); g1.connect(c.destination);
+  o1.type = "sine";
+  o1.frequency.setValueAtTime(200, t);
+  o1.frequency.exponentialRampToValueAtTime(800, t + 0.6);
+  g1.gain.setValueAtTime(0.01, t);
+  g1.gain.linearRampToValueAtTime(0.22, t + 0.1);
+  g1.gain.setValueAtTime(0.22, t + 0.5);
+  g1.gain.exponentialRampToValueAtTime(0.01, t + 0.8);
+  o1.start(t); o1.stop(t + 0.8);
+  // chord C5+E5+G5 at 0.55s
+  [523, 659, 784].forEach(freq => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, t + 0.55);
+    g.gain.setValueAtTime(0, t + 0.55);
+    g.gain.linearRampToValueAtTime(0.2, t + 0.55 + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.01, t + 1.4);
+    o.start(t + 0.55); o.stop(t + 1.4);
+  });
+}
+
+async function playArpeggio() {
+  const c = await getCtx();
+  const t = c.currentTime;
+  [523, 659, 784, 1047, 1319].forEach((freq, i) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = "sine";
+    const start = t + i * 0.1;
+    o.frequency.setValueAtTime(freq, start);
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(0.2, start + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.01, start + 0.5);
+    o.start(start); o.stop(start + 0.5);
+  });
+}
+
+async function playChime() {
+  const c = await getCtx();
+  const t = c.currentTime;
+  [523, 784, 1047].forEach((freq, i) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = "sine";
+    const start = t + i * 0.25;
+    o.frequency.setValueAtTime(freq, start);
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(0.2, start + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.01, start + 1.0);
+    o.start(start); o.stop(start + 1.0);
+  });
+}
+
+const sounds = { welcome: playWelcome, 'sweep-chord': playSweepChord, arpeggio: playArpeggio, chime: playChime };
+
+async function play(name, el) {
+  await sounds[name]();
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
+  el.classList.add('playing');
+  setTimeout(() => el.classList.remove('playing'), 1400);
+}
+</script>
+</body>
+</html>
