@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.1 — 2026-06-22
+
+### Features
+
+- **Startup sound**: Island Welcome chime plays on app launch (C major ascending four-note with harmonic shimmer, 2.0s), respects notification mute setting
+
 ## v0.5.0 — 2026-06-21
 
 - GitHub releases: https://github.com/mugpeng/awedot
