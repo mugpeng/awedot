@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.2 — 2026-06-24
+
+### Fixed
+
+- **Trial auto-registration**: `fetch_trial_status` now returns a three-state result (`Ok(Some)` / `Ok(None)` / `Err`) to distinguish "server reachable but device not in DB" from network failure
+- **Offline trial preservation**: when a device that started its trial offline auto-registers, the original `trial_started_at` is sent to the server so the trial countdown is not reset to "now"
+- **Edge function**: `trial-start` endpoint accepts optional `trial_started_at` from client for accurate offline trial registration
+
 ## v0.5.1 — 2026-06-22
 
 ### Features
