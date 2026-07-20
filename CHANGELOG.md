@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.3 — 2026-07-20
+
+### Fixed
+
+- **Trial registration retry**: on transient network failures, the app now attempts a best-effort registration for locally-tracked "ghost" devices, so trials that started offline sync as soon as the server is reachable
+- **HTTP timeout**: `fetch_trial_status` timeout increased from 3s to 8s to reduce false negatives on slow networks
+
+### Features
+
+- **Download progress**: app updates now stream progress events from the Rust backend and display percentage / error state in the Settings UI
+
+### Changed
+
+- **Codex runtime refactored**: monolithic `codex.rs` split into `mod.rs`, `activity.rs`, `discover.rs`, `parse.rs`, `process_match.rs` for improved clarity and maintainability (behavior unchanged)
+
 ## v0.5.2 — 2026-06-24
 
 ### Fixed
