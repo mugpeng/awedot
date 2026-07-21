@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.4 — 2026-07-21
+
+### Fixed
+
+- **Warp resume silently failed**: prior approach simulated keystrokes via System Events, which requires Accessibility permission — an ad-hoc-signed build cannot reliably hold that permission, so the resume never reached Warp. Resume now writes a Warp Tab Config and opens it via `warp://tab_config/<name>`, which needs no special permissions.
+
+### Changed
+
+- **Warp resume opens a new tab in the active window** instead of a fresh window: switched from Warp Launch Config (`.yaml`, `warp://launch/`) to Warp Tab Config (`.toml`, `warp://tab_config/`), reusing the window the user was last working in
+- **Resume confirmation wording**: backend and UI now say "Launched …" instead of "Resumed …" — launching a terminal is fire-and-forget, so a successful dispatch doesn't mean the session actually resumed
+- **Warp config is overwritten, not deleted**: the transient `~/.warp/tab_configs/awedot-resume.toml` is left in place after each resume; the next resume overwrites it. The previous timed-delete could race and remove the file before Warp read it on cold start
+
 ## v0.5.3 — 2026-07-20
 
 ### Fixed
