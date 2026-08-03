@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.6.0 — 2026-08-01
+
+### Fixed
+
+- **Warp jump regressed for bookmarked sessions on macOS**: when `jump_to_session` was refactored to share code with Windows, the third parameter silently became the bookmark id (a 13-character string like `aweshelf_0001`) instead of the agent session id. Warp's window-title match needs a UUID with hyphens, so the title-matching step quietly no-op'd for any bookmarked session and either fell through to "activate the most recent Warp window" or returned "no actionable jump target" outright. Jump now takes `session_id` and `window_key` as separate arguments so each platform uses the one it actually needs. A regression test pins the difference.
+
+### Changed
+
+- **Platform layer extracted**: terminal integration (jump, resume, terminal detection) is now under `src-tauri/src/platform/{macos,windows,unsupported}/` and selected at compile time. macOS code is moved verbatim — no behavior change.
+- **Hook transport split from event handling**: `sessions/socket.rs` no longer touches `tokio::net::UnixListener`. The `transport/` layer holds `unix_socket.rs` (macOS) and `named_pipe.rs` (Windows); `sessions/socket.rs` now only parses payloads and applies them to the registry. Wire format and dispatch are unchanged.
+
+### Features
+
+- **Windows (experimental)**: awedot now builds for Windows via `tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc` (NSIS installer; MSI requires running on Windows). Windows Terminal + PowerShell is the only supported terminal. Each session launches into a named window (`awedot-<bookmarkId>`) so jump has a stable handle, since Windows Terminal exposes no way to focus a specific existing tab. Sessions the user started themselves are unreachable for jump — UI offers a "Reopen in new window" action that re-runs the bookmark to make it findable.
+
+  **Windows build is currently in testing stage.** It has not been validated on a real Windows machine. Only Claude Code is fully functional. **Codex sessions all show as `Completed`** because Codex runtime discovery depends on `ps`/`lsof` (no Windows equivalent yet). The relevant TODO is `docs/todo/common-cfg-unix_0731.md` (items B and C). Tested by CI on `windows-latest` (Rust test suite: 119 passed).
+
 ## v0.5.4 — 2026-07-21
 
 ### Fixed
