@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.6.5 — 2026-08-10
+
+The licensing & purchase release: a full license lifecycle (trial → buy → activate → recover) lands, with multi-device support and a dedicated web pricing page.
+
+### Features
+
+- **License panel & activation**: the trial/license badge opens a panel showing the trial countdown, license activation (paste a key), the masked active key, and deactivate. Activation is enforced server-side — one device per key.
+- **Multi-device licenses**: buy 1, 2, or 3 devices in a single purchase. Each device gets its own single-device key; all keys for a purchase are delivered together in one email and listed on the post-purchase page. A refund revokes every key in the purchase at once. Early-bird pricing: 1 device $9.98, 2 devices $16.98, 3 devices $23.98.
+- **"Forgot your key?" recovery**: from the license panel, enter the purchase email and the linked key(s) are re-sent. The response is identical whether or not the email is known, so account existence isn't leaked. Rate-limited per IP (3/day).
+
+### Changed
+
+- **In-app purchase opens the web pricing page** (awedot.wehuman.top/pricing) in your browser. The page owns tier selection and creates the Creem checkout, so the desktop app no longer handles payment credentials directly — each tier's Buy button is wired to the checkout endpoint.
+- **Backend licensing pipeline** (awedot-dev): the checkout → webhook → key-minting path was rebuilt for multi-device. Checkout carries the device count through Creem metadata; the webhook mints that many keys with count-based idempotency (a retried payment event never over-mints); the post-purchase success page and key-lookup endpoint return every key for a purchase.
+
+### Fixed
+
+- **Payments stopped auto-issuing keys**: three public edge functions (the Creem webhook, the recover endpoint, and the post-purchase page) had JWT verification enabled, but they're called without a Supabase JWT — by Creem's servers, by browser redirects, and by the app's HTTP client. Every payment callback was being rejected at the edge, so no license key was ever minted automatically. All public endpoints are now deployed with JWT verification off.
+- **License key generation referenced a renamed column**: after a `checkout_id` rename, the key-generation RPC still inserted into the old `external_id` column (Postgres doesn't rewrite stored function bodies on a column rename), so minting failed silently. Consolidated to a single RPC overload that matches the current schema.
+
 ## v0.6.0 — 2026-08-01
 
 ### Fixed
