@@ -1,0 +1,1 @@
+直接关闭整个warp 的windows，相关的session 还会在sessions 里短暂停留
