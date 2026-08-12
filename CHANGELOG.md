@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.7.0 — 2026-08-12
+
+The tray-icon release: awedot gains a macOS menu bar presence with a tray icon and quick actions, plus ball animation primitives that make the floating ball easier to reposition programmatically.
+
+### Features
+
+- **macOS tray icon**: awedot now appears in the menu bar with a template icon (macOS) and color icon (Windows). The tray menu exposes "Recenter" and "Quit"; left-click also recenters the ball.
+- **Ball recenter from tray**: the floating ball listens for `tray://recenter` events and animates back to its default position, giving users an instant recovery path when the ball drifts off-screen.
+- **Ball animation primitives**: `recenterBall()` and `animateBallTo()` are extracted into reusable helpers, making future programmatic movement straightforward.
+
+### Changed
+
+- **CI config**: macOS Rust job dropped; Windows build is now manual-only (triggered via Actions → CI → Run workflow).
+
 ## v0.6.5 — 2026-08-10
 
 The licensing & purchase release: a full license lifecycle (trial → buy → activate → recover) lands, with multi-device support and a dedicated web pricing page.
