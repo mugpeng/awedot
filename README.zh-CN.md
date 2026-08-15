@@ -11,7 +11,7 @@
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
     <a href="https://github.com/mugpeng/awedot/releases"><img src="https://img.shields.io/github/v/release/mugpeng/awedot?style=flat-square" alt="Version"></a>
     <a href="https://github.com/mugpeng/awedot/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-proprietary-7C3AED?style=flat-square" alt="License"></a>
-    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS-0078D4?style=flat-square" alt="macOS"></a>
+    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-0078D4?style=flat-square" alt="macOS and Windows"></a>
   </p>
 </div>
 
@@ -49,12 +49,11 @@
 ## 支持情况
 
 **平台**
-- 现已支持：macOS
-- 即将推出：Windows · Linux
+- macOS
+- Windows（beta — Windows Terminal + PowerShell）
 
 **Agent**
-- 现已支持：Claude Code · Codex
-- 即将推出：Gemini CLI · Cursor Agent · Droid · Qoder · Copilot · CodeBuddy · OpenCode
+- Claude Code · Codex · OpenCode · ZCode · Cursor · Gemini CLI · Copilot · Trae · CodeBuddy
 
 ## Community
 
