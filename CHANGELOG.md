@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.7.3 — 2026-08-15
+
+The OpenCode reliability release: closed OpenCode sessions now disappear promptly instead of lingering on a live sibling, and resumed OpenCode sessions are tracked accurately.
+
+### Fixed
+
+- **Closed OpenCode sessions lingered for minutes**: OpenCode discovery matches processes by working directory, so a sibling `opencode` running in the same directory kept a closed session looking alive. A completed session is now revived only when discovery proves that exact session is running again — a fresh active DB row or an argv session-id match. Otherwise the tracking state disappears with the closed session, the same behavior Claude Code gets from its state file.
+- **Ctrl+C'd OpenCode left a ghost session**: the in-process plugin dies with the agent and sends no farewell event, so nothing retired the session. The bridge now captures the OpenCode host process pid, letting the process monitor mark the session Completed (~6s) after the process dies.
+- **A live sibling's pid could keep a dead session alive**: for directory-matched providers the discovered pid may belong to a sibling session's process; replacing the session's own pid with it defeated the liveness check. Discovery now only fills a missing pid for these providers, never overwrites a captured one.
+
+### Features
+
+- **OpenCode session resume support**: sessions resumed via `opencode -s <id>` / `--session <id>` are now discovered and kept live — the argv session-id match counts as an exact process match even when the DB row is stale.
+
+### Changed
+
+- **Platform support narrowed to macOS and Windows**: Linux fallback stubs and the generic "unsupported platform" code path are removed.
+
 ## v0.7.0 — 2026-08-12
 
 The tray-icon release: awedot gains a macOS menu bar presence with a tray icon and quick actions, plus ball animation primitives that make the floating ball easier to reposition programmatically.
