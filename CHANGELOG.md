@@ -2,20 +2,30 @@
 
 ## v0.7.3 — 2026-08-15
 
-The OpenCode reliability release: closed OpenCode sessions now disappear promptly instead of lingering on a live sibling, and resumed OpenCode sessions are tracked accurately.
-
-### Fixed
-
-- **Closed OpenCode sessions lingered for minutes**: OpenCode discovery matches processes by working directory, so a sibling `opencode` running in the same directory kept a closed session looking alive. A completed session is now revived only when discovery proves that exact session is running again — a fresh active DB row or an argv session-id match. Otherwise the tracking state disappears with the closed session, the same behavior Claude Code gets from its state file.
-- **Ctrl+C'd OpenCode left a ghost session**: the in-process plugin dies with the agent and sends no farewell event, so nothing retired the session. The bridge now captures the OpenCode host process pid, letting the process monitor mark the session Completed (~6s) after the process dies.
-- **A live sibling's pid could keep a dead session alive**: for directory-matched providers the discovered pid may belong to a sibling session's process; replacing the session's own pid with it defeated the liveness check. Discovery now only fills a missing pid for these providers, never overwrites a captured one.
+The multi-agent release: awedot goes from 2 tracked agents to 9 — OpenCode, ZCode, Cursor, Trae, and CodeBuddy join Claude Code and Codex — plus a ground-up pass on OpenCode session lifecycle reliability.
 
 ### Features
 
-- **OpenCode session resume support**: sessions resumed via `opencode -s <id>` / `--session <id>` are now discovered and kept live — the argv session-id match counts as an exact process match even when the DB row is stale.
+- **OpenCode support**: sessions are discovered from OpenCode's SQLite database with live process matching, show conversation previews like Claude/Codex, and resume via `opencode -s <id>`. Realtime events arrive through an OpenCode plugin that awedot installs and cleans up automatically. Sessions resumed with `-s` / `--session` are recognized and kept live even when the DB row is stale.
+- **ZCode support**: SQLite discovery mirroring OpenCode, hooks written in ZCode's nested `events` shape, and host-app activation for jump/resume (GUI-first agent — no per-session resume). A live session silent for 30 minutes is downgraded to Idle so it can't stay "active" forever after a lost hook.
+- **Cursor session support**: Cursor's hook vocabulary is normalized to awedot's, cursor-specific events are mapped, and resume activates the Cursor app.
+- **Trae support**: Claude-shaped hooks in `~/.trae/hooks.json`; resume/jump activate the Trae app.
+- **CodeBuddy support**: a Claude Code fork — same flat hooks shape, resume via `codebuddy --resume <id>`.
+- **Hook-only terminal agents hide when they exit**: Gemini, Copilot, and CodeBuddy have no disk discovery, so a session whose process died (Ctrl+C, closed terminal) previously stayed Active until a 30-minute stale timeout. The bridge now captures the agent's pid; the session is marked Completed within seconds of the process dying.
+
+### Fixed
+
+- **Gemini/Copilot sessions were mislabeled as "agent"**: routing re-derived the provider from the payload's `source` field, which carries Claude semantics. Routing now uses the explicit awedot source tag.
+- **Gemini/Cursor/Copilot bookmarks resumed with `claude --resume`**: each provider now uses its own CLI (`gemini --resume <id>`, `copilot --resume=<id>`) or activates its GUI app.
+- **The OpenCode plugin never sent realtime events**: ESM `require()` threw on every event and the error was swallowed — no event ever reached awedot until this was bootstrapped properly.
+- **Subagent sessions were tracked as top-level sessions** (OpenCode / ZCode): only main sessions (`parent_id` empty) are listed now.
+- **Closed OpenCode sessions lingered for minutes**: OpenCode discovery matches processes by working directory, so a sibling `opencode` running in the same directory kept a closed session looking alive. A completed session is now revived only when discovery proves that exact session is running again — a fresh active DB row or an argv session-id match. Otherwise the tracking state disappears with the closed session, the same behavior Claude Code gets from its state file.
+- **Ctrl+C'd OpenCode left a ghost session**: the in-process plugin dies with the agent and sends no farewell event, so nothing retired the session. OpenCode now gets the same pid-based retirement as Gemini/Copilot/CodeBuddy.
+- **A live sibling's pid could keep a dead session alive**: for directory-matched providers the discovered pid may belong to a sibling session's process; replacing the session's own pid with it defeated the liveness check. Discovery now only fills a missing pid for these providers, never overwrites a captured one.
 
 ### Changed
 
+- **Bookmarking is limited to CLI agents** (Claude Code, Codex, OpenCode): a bookmark promises "resume this exact session later", which GUI-first apps (ZCode, Cursor, Trae) can't honor — for those, jump-to-app is the whole story.
 - **Platform support narrowed to macOS and Windows**: Linux fallback stubs and the generic "unsupported platform" code path are removed.
 
 ## v0.7.0 — 2026-08-12
