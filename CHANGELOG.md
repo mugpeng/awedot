@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.7.4 — 2026-08-21
+
+### Features
+
+- **Windows in-app update**: downloads the NSIS installer and launches it directly from the app.
+- **Windows host-app activation**: `activate_host_app` now starts/focuses GUI host apps on Windows.
+- **Path basename display**: bookmarks and session rows show cleaner directory names via `pathBasename`.
+
+### Fixed
+
+- **Parent-process lookup in awedot-bridge**: switched to `current.parent()` so the bridge resolves the correct parent.
+- **License cache path**: now respects `AWEDOT_LICENSE_CACHE` env override.
+- **MutationObserver target in use-scroll-fade**: fixed observer attaching to the wrong node.
+- **Root element validation**: `main.tsx` now validates `#root` exists instead of using a non-null assertion.
+
+### Changed
+
+- **Default terminal is platform-aware**: falls back to `wt` on Windows.
+- **License module cleanup**: derived `PartialEq`, extracted `compute_offline_days_left`, and added comprehensive unit tests for cache/trial logic.
+- **FloatingBall keys stabilized**: uses `DOT_STATES` for consistent React keys.
+- **`recognize_terminal_app` marked unix-only** with a clarifying comment.
+- **Removed unused `window_exists` wrapper** from the Windows platform layer.
+
 ## v0.7.3 — 2026-08-15
 
 The multi-agent release: awedot goes from 2 tracked agents to 9 — OpenCode, ZCode, Cursor, Trae, and CodeBuddy join Claude Code and Codex — plus a ground-up pass on OpenCode session lifecycle reliability.
