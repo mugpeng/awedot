@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased
+
+### Security
+
+- Replaced unsigned in-app installer execution with a trusted GitHub Release handoff.
+- Restricted external links to HTTPS on the official awedot and GitHub hosts.
+- Open external links on Windows via `ShellExecuteW` instead of a `cmd /C start`
+  shell-out, closing a command-injection path through URL metacharacters such as `&`.
+- Hook configuration writes now keep `.awedot.bak` backups, preserve symlink-managed dotfiles,
+  and replace real config targets atomically.
+
+### Fixed
+
+- Prevented stale bookmark-search responses from replacing newer results.
+- Kept the shared mutation loading state active until all concurrent mutations finish.
+- Avoided whole-store rollback snapshots overwriting unrelated concurrent changes.
+
+### Changed
+
+- Hooks are repaired when any detected provider/event is incomplete or after an awedot version
+  change, instead of rewriting complete configurations on every launch.
+- Rust formatting, strict Clippy, and tests now run automatically for backend pull requests.
+- Development requires Node.js 20.19+ and the pinned Rust 1.95 toolchain.
+
 ## v0.7.4 — 2026-08-21
 
 ### Features
