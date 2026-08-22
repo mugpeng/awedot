@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.7.5 — 2026-08-22
 
 ### Security
 
