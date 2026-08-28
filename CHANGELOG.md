@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.7.8 — 2026-08-28
+
+### Features
+
+- **SSH remote sessions**: connect to your servers over SSH and monitor the Claude Code / Codex sessions running on them right from the desktop app.
+
+### Fixed
+
+- **SSH remote hooks**: the tunnel's TCP listener no longer dies the moment it is created, so remote hooks stay connected.
+- **Codex sessions**: the main session is no longer demoted while a sub-agent writes its rollout file.
+- **Session tracking**: fixed leaked Codex sub-agents, made session-title fallbacks more reliable, and stopped done-toast notifications from flickering.
+- **Session jump**: no longer fabricates jump targets from ambiguous working-directory matches.
+
+### Changed
+
+- Reworked the internals of Windows support and session jump.
+- Refreshed the English and Chinese READMEs, added a CONTRIBUTING guide, and updated the logo and license files.
+
 ## v0.7.5 — 2026-08-22
 
 ### Security
