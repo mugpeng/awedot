@@ -4,6 +4,7 @@
 
 ### Features
 
+- **In-app updates**: the app downloads new releases itself again, swaps the installed app, and relaunches — after a confirmation dialog, with download progress in the banner and settings. The GitHub Releases page stays available as the manual fallback.
 - **SSH remote sessions**: connect to your servers over SSH and monitor the Claude Code / Codex sessions running on them right from the desktop app.
 
 ### Fixed
