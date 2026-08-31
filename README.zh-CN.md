@@ -1,6 +1,6 @@
 <div align="center">
   <img src="logo/logo.png" alt="awedot" width="180">
-  <h1>awedot: AI Session Bookmark Manager for AI Agents</h1>
+  <h1>awedot: AI Session Bookmark Manager for AI Agents <a href="https://github.com/Webioinfo01/aweskill"><img src="https://raw.githubusercontent.com/Webioinfo01/aweskill/main/logo/aweskill-badge2.svg" alt="aweskill companion"></a></h1>
   <p><strong>悬浮球常驻屏幕边缘，一键 bookmark 当前 session，随时 resume 并携带当时的 API profile。</strong></p>
   <p>
     <a href="./README.md">English</a> ·
