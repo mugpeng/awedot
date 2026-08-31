@@ -11,7 +11,7 @@
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
     <a href="https://github.com/mugpeng/awedot/releases"><img src="https://img.shields.io/github/v/release/mugpeng/awedot?style=flat-square" alt="Version"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-proprietary-7C3AED?style=flat-square" alt="License"></a>
-    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-0078D4?style=flat-square" alt="macOS and Windows"></a>
+    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20(in%20development)-0078D4?style=flat-square" alt="macOS 已发布；Windows 开发中"></a>
   </p>
 </div>
 
@@ -23,9 +23,9 @@
 | 分类管理 | 按项目/类别组织书签，快速查找 |
 | 实时发现 | 自动扫描本地 Claude Code、Codex 等 agent 的 session |
 | 一键 Resume | 在终端恢复 session，自动携带当时的 API profile |
-| SSH Remote | 监控远程服务器上的 Claude Code / Codex session |
+| SSH Remote | 监控远程服务器上的 AI coding agent session |
 | 悬浮球形态 | 轻量常驻，不占用工作区，点击即展开 |
-| 原生桌面应用 | macOS / Windows（Linux 不支持） |
+| 原生桌面应用 | macOS（已发布）；Windows 开发中（Linux 不支持） |
 
 ## 下载
 
@@ -35,7 +35,7 @@
 
 ## 更新日志
 
-见 [CHANGELOG.md](CHANGELOG.md)。
+见 [CHANGELOG.md](https://github.com/mugpeng/awedot/blob/main/CHANGELOG.md)。
 
 ## 使用方法
 
@@ -51,14 +51,14 @@
 
 6. **搜索与筛选**：面板支持全文搜索、按状态/时间/工具/项目排序，以及分类过滤。
 
-7. **SSH Remote**：打开 Settings → Remote Servers，填入 name / host / user 后点 Deploy。远程的 Claude Code / Codex session 会带服务器名称标签实时出现在面板中。
+7. **SSH Remote**：打开 Settings → Remote Servers，填入 name / host / user 后点 Deploy。远程的 agent session 会带服务器名称标签实时出现在面板中。
 
 ## 平台支持
 
 | 平台 | Resume 终端 | Jump（定位会话所在终端） |
 |---|---|---|
 | macOS | Terminal.app（osascript） | 支持 |
-| Windows | Windows Terminal（`wt`），回退 PowerShell | 仅限 awedot 自己拉起的窗口 |
+| Windows（开发中） | Windows Terminal（`wt`），回退 PowerShell | 仅限 awedot 自己拉起的窗口 |
 
 > Linux 不支持：平台层只保留 macOS / Windows 实现，没有 Linux 编译桩，
 > 也没有发布安装包。核心的会话追踪（hooks + 磁盘发现）理论上跨平台，
@@ -105,7 +105,8 @@ Release 页面，由用户下载并通过系统安装；在发布流程建立 Ta
 
 ## SSH Remote
 
-在远程服务器上经 SSH 运行 Claude Code / Codex，session 会实时出现在 awedot
+在远程服务器上经 SSH 运行 CLI coding agent（Claude Code、Codex、Gemini CLI、Copilot、
+OpenCode、Trae、CodeBuddy 等），session 会实时出现在 awedot
 面板中，带服务器名称标签，与本地 session 统一展示。
 
 ### 工作原理
@@ -117,8 +118,8 @@ agent hooks → awedot-bridge (Linux musl 静态) → ssh -R 隧道 → localhos
 
 - **Deploy**：Settings → Remote Servers 填 name/host/user 点 Deploy。awedot
   自动探测远程架构（Linux x86_64/aarch64）、上传约 2MB 的静态 bridge 二进制
-  到远程 `~/.awedot/bin/`、安装 Claude/Codex hooks（只增改 awedot 自己的条目，
-  不动其他工具的配置）、建立反向隧道。
+  到远程 `~/.awedot/bin/`、安装与本地一致的 agent hooks（服务器上没有的
+  agent 自动跳过；只增改 awedot 自己的条目，不动其他工具的配置）、建立反向隧道。
 - **隧道**：走用户自己的系统 `ssh`（`~/.ssh/config`、ProxyJump、MFA、agent
   认证全部照常）。断线后指数退避自动重连，App 重启自动恢复隧道。
 - **隐私**：bridge 只转发 hook 事件（状态与摘要），不读取代码文件；事件经
@@ -129,13 +130,17 @@ agent hooks → awedot-bridge (Linux musl 静态) → ssh -R 隧道 → localhos
 
 - 本机装有 `ssh`（macOS/Linux 自带；Windows 需 OpenSSH client）。
 - 远程 Linux bridge 二进制：从 [Release](https://github.com/mugpeng/awedot/releases) 下载
-  `awedot-bridge-linux-{amd64,arm64}` 放入 `~/.awedot/bin/`。
+  `awedot-bridge-linux-{amd64,arm64}` 放入 `~/.awedot/bin/`
+  （源码构建见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)）。
 
 ### 已知限制（如实声明）
 
 - 远程 session 的进程存活依赖 hook 事件（SessionEnd）与 stale 超时，App
   重启后远程 session 在下一次事件（新 prompt / 工具调用）时重新出现。
-- 远程 session 的 Jump 打开一个 `ssh -t` 终端，无法精确聚焦远程的某个 pane。
+- 远程 session 的 Jump 打开一个 `ssh -t` 终端并落在该会话的工作目录（已知时），
+  无法精确聚焦远程的某个 pane。
+- 远程 session 不支持保存书签 / Resume —— 会话记录在服务器上，本地保存的
+  "以后恢复" 承诺无法兑现，因此 Save 入口对远程 session 隐藏。
 - 远程审批仅为 UI 状态（与本地一致），不回写 agent。
 
 ## Community
@@ -145,6 +150,44 @@ agent hooks → awedot-bridge (Linux musl 静态) → ssh -R 隧道 → localhos
 **功能建议** — [Open a Feature Request](https://github.com/mugpeng/awedot/issues/new?template=feature_request.yml)
 
 **提问** — [Open an Issue](https://github.com/mugpeng/awedot/issues/new)
+
+## Awesome 软件生态
+
+awedot 是一个不断壮大的 "awesome" 工具家族中的一员 — 围绕 AI 编程 agent 打造，local-first、可被 agent 直接操作。
+
+### CLI 工具
+
+- **[aweskill](https://aweskill.webioinfo.top/)** — CLI 优先的技能包管理器，支持 47+ AI 编程 agent。
+- **[aweswitch](https://github.com/Webioinfo01/aweswitch)** — Claude Code、Codex、OpenCode 的 agent 配置切换器。
+- **[awerouter](https://github.com/mugpeng/awerouter)** — 智能路由器，用结构信号把请求分给 Flash 或 Pro 模型，减少不必要的模型开销。
+- **[aweshelf](https://github.com/Webioinfo01/aweshelf)** — 收藏、分类、恢复 AI 编程会话，还能搭配 aweswitch 实现保存配置，一键启动。
+- **[aweshare](https://github.com/wehuman01/aweshare)** — 通过自建 Hub 共享本地 Ollama/vLLM，或国产厂商 coding plan，或已授权的 OpenAI/Anthropic 帐号订阅，实现 token 的共享经济。
+- **[awewarm](https://github.com/wehuman01/awewarm)** — 订阅窗口保持器，让 AI 编程套餐的窗口持续激活，无论是本地设置，还是通过远程连接的服务器。
+- **[awescholar](https://github.com/Webioinfo01/awescholar)** — AI agent 可自主执行的科学文献发现与策展，搜索、标注、筛选和报告学术论文。
+
+### 桌面应用
+
+- **[awedot](https://awedot.wehuman.top/)** — 悬浮球驻留屏幕边缘，实时追踪当前 AI 会话；一键收藏、随时恢复，并可搭配 aweswitch 固定 agent 配置（比如用 GLM 模型启动）。
+
+### Project Collections
+
+- **[Awesome AI Meets Biology](https://github.com/Webioinfo01/Awesome-AI-Meets-Biology)** — AI 在生物学、生物信息学和生物医学研究中应用的精选综述。由 awescholar 驱动。
+- **[Awesome AI Virtual Tumor](https://github.com/Webioinfo01/Awesome-AI-Virtual-Tumor)** — 面向虚拟肿瘤建模与仿真的前沿 AI 系统精选合集：静态模型、动态模型、agent、基准与综述。
+
+## 赞助与支持
+
+如果 awedot 帮到了你，欢迎支持一下：
+
+- ⭐ 给项目点个 Star — 让更多人看到它。
+- ☕ [Ko-fi](https://ko-fi.com/mugpeng) — 请我喝杯咖啡。
+- 💬 微信 — 扫描下方收款码。
+
+<p align="center">
+  <img src="assets/images/wechat-pay.jpg" alt="微信收款码" width="240">
+</p>
+
+> 你的支持让项目持续维护下去 — 谢谢。
+
 
 ## License
 

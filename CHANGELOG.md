@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+- **Desktop-app sessions**: Codex threads from the ChatGPT desktop app are tracked as desktop sessions — jump activates the host app (no terminal to focus), bookmarks work, and resume opens the session through the CLI (`codex resume`). Claude Code hosted by the Claude desktop app gets the same treatment, detected by process ancestry.
+
+### Fixed
+
+- **Codex sub-agents**: `thread_source` is now a whitelist (`user` only; absent = legacy CLI) — internal threads like `guardian_review` are filtered even when they stop carrying the `subagent` source marker.
+
 ## v0.7.8 — 2026-08-28
 
 ### Features

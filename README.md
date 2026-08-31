@@ -11,7 +11,7 @@
     <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/github/stars/mugpeng/awedot?style=flat-square" alt="Stars"></a>
     <a href="https://github.com/mugpeng/awedot/releases"><img src="https://img.shields.io/github/v/release/mugpeng/awedot?style=flat-square" alt="Version"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-proprietary-7C3AED?style=flat-square" alt="License"></a>
-    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-0078D4?style=flat-square" alt="macOS and Windows"></a>
+    <a href="https://github.com/mugpeng/awedot"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20(in%20development)-0078D4?style=flat-square" alt="macOS available; Windows in development"></a>
   </p>
 </div>
 
@@ -23,9 +23,9 @@
 | Categorized management | Organize bookmarks by project/category, find them fast |
 | Real-time discovery | Automatically scans local sessions of Claude Code, Codex, and other agents |
 | One-click resume | Restore the session in a terminal, carrying the API profile from that moment |
-| SSH Remote | Monitor Claude Code / Codex sessions on remote servers |
+| SSH Remote | Monitor AI coding agent sessions on remote servers |
 | Floating orb form | Lightweight and always available, never takes workspace, click to expand |
-| Native desktop app | macOS / Windows (no Linux support) |
+| Native desktop app | macOS (shipped); Windows in development (no Linux support) |
 
 ## Download
 
@@ -35,7 +35,7 @@ See [Releases](https://github.com/mugpeng/awedot/releases) for the latest `.dmg`
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/mugpeng/awedot/blob/main/CHANGELOG.md).
 
 ## How to Use
 
@@ -51,14 +51,14 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 6. **Search & Filter**: Full-text search, sort by status / time / tool / project, and filter by category.
 
-7. **SSH Remote**: Open Settings → Remote Servers, add a server (name / host / user) and click Deploy. Remote Claude Code / Codex sessions then appear live in the panel, tagged with the server name.
+7. **SSH Remote**: Open Settings → Remote Servers, add a server (name / host / user) and click Deploy. Remote agent sessions then appear live in the panel, tagged with the server name.
 
 ## Platform Support
 
 | Platform | Resume terminal | Jump (locate the terminal hosting a session) |
 |---|---|---|
 | macOS | Terminal.app (osascript) | Supported |
-| Windows | Windows Terminal (`wt`), falls back to PowerShell | Only windows launched by awedot itself |
+| Windows (in development) | Windows Terminal (`wt`), falls back to PowerShell | Only windows launched by awedot itself |
 
 > Linux is not supported: the platform layer keeps only macOS / Windows implementations, has no
 > Linux build stubs, and ships no installers. The core session tracking (hooks + disk discovery)
@@ -115,8 +115,9 @@ or execute installers in the background without signature verification.
 
 ## SSH Remote
 
-Run Claude Code / Codex on a remote server over SSH and the sessions show up live in the awedot
-panel, tagged with the server name, unified with local sessions.
+Run CLI coding agents (Claude Code, Codex, Gemini CLI, Copilot, OpenCode, Trae, CodeBuddy, …)
+on a remote server over SSH and the sessions show up live in the awedot panel, tagged with the
+server name, unified with local sessions.
 
 ### How it works
 
@@ -127,8 +128,9 @@ agent hooks → awedot-bridge (static Linux musl) → ssh -R tunnel → localhos
 
 - **Deploy**: fill in name/host/user under Settings → Remote Servers and click Deploy. awedot
   auto-detects the remote architecture (Linux x86_64/aarch64), uploads the ~2MB static bridge
-  binary to the remote `~/.awedot/bin/`, installs Claude/Codex hooks (only adding or touching
-  awedot's own entries, never other tools' configs), and establishes the reverse tunnel.
+  binary to the remote `~/.awedot/bin/`, installs hooks for the same agents as the local install (agents missing on
+  the server are skipped; only adding or touching awedot's own entries, never other tools'
+  configs), and establishes the reverse tunnel.
 - **Tunnel**: rides your own system `ssh` (`~/.ssh/config`, ProxyJump, MFA, and agent
   authentication all work as usual). Reconnects automatically with exponential backoff;
   tunnels are restored on app restart.
@@ -141,13 +143,17 @@ agent hooks → awedot-bridge (static Linux musl) → ssh -R tunnel → localhos
 
 - `ssh` on the local machine (bundled with macOS/Linux; Windows needs the OpenSSH client).
 - Remote Linux bridge binaries: download `awedot-bridge-linux-{amd64,arm64}` from a
-  [Release](https://github.com/mugpeng/awedot/releases) into `~/.awedot/bin/`.
+  [Release](https://github.com/mugpeng/awedot/releases) into `~/.awedot/bin/`
+  (build from source — see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)).
 
 ### Known limitations (stated honestly)
 
 - Remote session liveness relies on hook events (SessionEnd) and stale timeouts; after an app
   restart, remote sessions reappear on the next event (new prompt / tool call).
-- Jump for a remote session opens an `ssh -t` terminal and cannot focus the exact remote pane.
+- Jump for a remote session opens an `ssh -t` terminal landing in the session's working
+  directory (when known) and cannot focus the exact remote pane.
+- Remote sessions cannot be bookmarked or resumed — their transcripts live on the server, so a
+  local save/resume could never reach them. The Save action is hidden for remote sessions.
 - Remote approval is UI state only (same as local) and is not written back to the agent.
 
 ## Community
@@ -157,6 +163,44 @@ agent hooks → awedot-bridge (static Linux musl) → ssh -R tunnel → localhos
 **Request a Feature** — [Open a Feature Request](https://github.com/mugpeng/awedot/issues/new?template=feature_request.yml)
 
 **Ask a Question** — [Open an Issue](https://github.com/mugpeng/awedot/issues/new)
+
+## Awesome Ecosystem
+
+awedot is part of a growing family of "awesome" tools built around AI coding agents — local-first, agent-operable, and fun to use.
+
+### CLI Tools
+
+- **[aweskill](https://aweskill.webioinfo.top/)** — CLI-first skill package manager supporting 47+ AI coding agents.
+- **[aweswitch](https://github.com/Webioinfo01/aweswitch)** — Agent profile switcher for Claude Code, Codex, and OpenCode.
+- **[awerouter](https://github.com/mugpeng/awerouter)** — Smart router that splits requests between Flash and Pro models using structural signals, cutting unnecessary model spend.
+- **[aweshelf](https://github.com/Webioinfo01/aweshelf)** — Bookmark, categorize, and restore AI coding sessions; pairs with aweswitch to save profiles and launch with one command.
+- **[aweshare](https://github.com/wehuman01/aweshare)** — Share local Ollama/vLLM backends, domestic coding plans, or authorized OpenAI/Anthropic subscriptions through a self-hosted hub — a sharing economy for tokens.
+- **[awewarm](https://github.com/wehuman01/awewarm)** — Subscription window warmer that keeps AI coding-plan windows active, for local setups and through a remote hub server.
+- **[awescholar](https://github.com/Webioinfo01/awescholar)** — AI-agent-operable scientific literature discovery and curation.
+
+### Desktop Apps
+
+- **[awedot](https://awedot.wehuman.top/)** — A floating orb at your screen edge keeps track of the current AI session: bookmark it in one click, resume anytime, and pair with aweswitch to pin the agent's config (e.g., relaunch with the GLM model).
+
+### Project Collections
+
+- **[Awesome AI Meets Biology](https://github.com/Webioinfo01/Awesome-AI-Meets-Biology)** — A curated survey of AI applications in biology, bioinformatics, and biomedical research. Powered by awescholar.
+- **[Awesome AI Virtual Tumor](https://github.com/Webioinfo01/Awesome-AI-Virtual-Tumor)** — A curated collection of state-of-the-art AI systems for virtual tumor modeling and simulation: static models, dynamic models, agents, benchmarks, and reviews.
+
+## Support
+
+If awedot saves you time, consider supporting it:
+
+- ⭐ Star the repo — it helps others find it.
+- ☕ [Ko-fi](https://ko-fi.com/mugpeng) — buy me a coffee.
+- 💬 WeChat — scan the QR code below.
+
+<p align="center">
+  <img src="assets/images/wechat-pay.jpg" alt="WeChat Pay" width="240">
+</p>
+
+> Sponsors keep this project maintained — thank you.
+
 
 ## License
 
