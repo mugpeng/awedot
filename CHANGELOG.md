@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.8.0 — 2026-09-14
 
 ### Features
 
@@ -9,6 +9,19 @@
 ### Fixed
 
 - **Codex sub-agents**: `thread_source` is now a whitelist (`user` only; absent = legacy CLI) — internal threads like `guardian_review` are filtered even when they stop carrying the `subagent` source marker.
+- **In-app updates**: an update's publisher identity is verified before install — the macOS app must carry the same codesign team ID and the Windows installer the same signer as the running app. The old bundle is backed up before replacement on macOS, and the installer path handed to `cmd start` on Windows is quoted safely.
+- **License**: expired keys now actually deactivate (`expires_at` is honoured), activation is backed by a keychain proof so cache files can't be forged, a mere status check no longer auto-registers the trial, and the trial watermark is stamped when the trial starts offline.
+- **Hooks**: values in Unix hook commands are POSIX-quoted, hook removal is atomic like every other settings write, hook events are built and applied under one registry lock, hook commands point at the launcher instead of the bundle binary, the OpenCode plugin only installs when OpenCode is present and is verified through the XDG-aware path, and async EPIPE on the bridge stdin no longer kills the plugin.
+- **SSH remote**: option-shaped `user@host` values are rejected, the tunnel never prompts for auth (`BatchMode=yes`) and kills the ssh child on the early-stop path, remote config writes are atomic under a lock with unique per-remote ports, deploy pipes drain concurrently with bounded steps, frontend commands resolve remote sessions by bare id, and cwd admission rules are separator-agnostic for Windows paths.
+- **Session tracking**: SQLite discovery reads wait and fall back instead of failing silently, exec rollouts are skipped and live discovery is capped like the disk scan, `lsof` resolves through PATH before `/usr/sbin`, sessions sort by parsed timestamps rather than raw RFC3339 strings, a stale `XDG_DATA_HOME` falls back to the default data dir, an `EPERM` from the pid probe counts as alive, stale downgrades are decided from live state rather than the cycle snapshot, subagent events no longer clear pending permission requests, ZCode no longer adopts a sibling session's pid from a directory match, WaitingForAction sessions keep their activity clock when un-stuck, and Warp session ids are no longer byte-sliced.
+- **Session jump**: each Warp resume attempt gets its own tab config and the Warp fallback only launches for Warp sessions, Terminal/iTerm activation waits until the target tab actually matches, WT windows are found by name after a tab switch hides the title, AppleScript runs are bounded so the jump chain stays alive, Terminal cwd matching reads the whole `lsof` NAME column, and a missing jump target is detected even when serialized as null.
+- **Panel**: the toast collapse lifecycle was rewritten — collapsing never hides other toasts or skips cleanup — with one shared toast-stack height formula; notifications displace by priority instead of dropping when slots are full; the ball expands from its real position, not the window origin; drag state (not the ref) gates magnet snapping; License/Settings pages measure with the panel ref; the notification pulse fires on any change; and the startup chime plays once under StrictMode.
+- **Bookmarks**: an explicit `null` clears profile / active session, the session link is awaited so a failure keeps the modal open, rollback tolerates a null-serialized link, stale search results clear when the panel unmounts, hidden idle overflow counts toward the free-tier lock, aweswitch profile lookups are scoped to the bookmark's provider, and the new-bookmark form only offers bookmarkable providers.
+- **Settings**: writes are atomic, and a corrupt settings file falls back to defaults.
+
+### Changed
+
+- **Performance**: transcript snapshots fold incrementally instead of re-reading whole files, and App/Panel subscribe with per-field selectors to cut re-renders on large session sets.
 
 ## v0.7.8 — 2026-08-28
 
